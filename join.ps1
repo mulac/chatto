@@ -1,39 +1,21 @@
-Write-Host ""
-Write-Host "⚠️  THIS SCRIPT IS VIBECODED ⚠️" -ForegroundColor Yellow
-Write-Host "It *should* work, but has not been tested on a real Windows machine yet."
-$confirm = Read-Host "Continue? (Y/N)"
-if ($confirm -notin @("Y","y")) { exit 1 }
-
-Write-Host "=== Chatto Cluster Join (Windows) ==="
-
-# Tailscale
+Write-Host "[+] Checking tailscale..."
 if (-not (Get-Command tailscale.exe -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Installing Tailscale..."
-    iwr https://tailscale.com/windows.exe -OutFile tailscale-installer.exe
+    Invoke-WebRequest https://tailscale.com/windows.exe -OutFile tailscale-installer.exe
     Start-Process .\tailscale-installer.exe -Wait
 }
-try { tailscale status | Out-Null } catch { tailscale up }
+tailscale up
 
-# kubectl
+Write-Host "[+] Checking kubectl..."
 if (-not (Get-Command kubectl.exe -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Installing kubectl (curl method)..."
-    $version = (iwr https://dl.k8s.io/release/stable.txt).Content.Trim()
-    iwr "https://dl.k8s.io/release/$version/bin/windows/amd64/kubectl.exe" -OutFile "$env:USERPROFILE\kubectl.exe"
+    $v = (iwr https://dl.k8s.io/release/stable.txt).Content.Trim()
+    iwr "https://dl.k8s.io/release/$v/bin/windows/amd64/kubectl.exe" -OutFile "$env:USERPROFILE\kubectl.exe"
     $env:PATH += ";$env:USERPROFILE"
 }
 
-# kubectl-tailscale-auth
-if (-not (Get-Command kubectl-tailscale-auth.exe -ErrorAction SilentlyContinue)) {
-    Write-Host "[+] Installing kubectl-tailscale-auth..."
-    iwr https://raw.githubusercontent.com/tailscale/k8s-auth/main/install.ps1 | iex
-}
+Write-Host "[+] Installing kubeconfig..."
+$dir="$env:USERPROFILE\.kube"
+New-Item -ItemType Directory -Force -Path $dir | Out-Null
+iwr http://100.120.68.88:8000/k3s.yaml -OutFile "$dir\config"
 
-# kubeconfig
-$KubeDir="$env:USERPROFILE\.kube"
-New-Item -ItemType Directory -Force -Path $KubeDir | Out-Null
-iwr https://mulac.github.io/chatto/kubeconfig -OutFile "$KubeDir\config"
-
-Write-Host ""
-Write-Host "✅ Done!"
-Write-Host "Open a NEW terminal and run: kubectl get nodes"
+Write-Host "`n✅ Done! Run: kubectl get nodes"
 
