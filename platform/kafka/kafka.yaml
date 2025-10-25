@@ -1,4 +1,14 @@
 apiVersion: kafka.strimzi.io/v1beta2
+kind: KafkaBridge
+metadata:
+  name: kafka-bridge
+spec:
+  replicas: 1
+  bootstrapServers: kafka-cluster-kafka-bootstrap:9092
+  http:
+    port: 8080
+---
+apiVersion: kafka.strimzi.io/v1beta2
 kind: KafkaNodePool
 metadata:
   name: dual-role
