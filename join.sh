@@ -2,25 +2,21 @@
 set -e
 
 echo ""
-echo "=== K3s Cluster Join Script (Linux/macOS) ==="
+echo "=== Chatto Cluster Join (Linux/macOS) ==="
 
-# --- Detect OS Name (linux / darwin) ---
+# Detect OS + ARCH for kubectl
 OS="$(uname -s | tr '[:upper:]' '[:lower:]')"
-
-# --- Detect Architecture & Normalize for Kubernetes ---
 ARCH="$(uname -m)"
 case "$ARCH" in
   x86_64) ARCH="amd64" ;;
   aarch64) ARCH="arm64" ;;
-  armv7l) ARCH="arm" ;;
-  armv6l) ARCH="arm" ;;
   arm64) ARCH="arm64" ;;
+  armv7l|armv6l) ARCH="arm" ;;
 esac
 
-echo "[+] Detected platform: $OS / $ARCH"
+echo "[+] Platform: $OS / $ARCH"
 
-# --- Tailscale Install / Login ---
-echo "[+] Checking for Tailscale..."
+# ----- Install Tailscale -----
 if ! command -v tailscale >/dev/null 2>&1; then
   echo "[+] Installing Tailscale..."
   curl -fsSL https://tailscale.com/install.sh | sh
@@ -31,25 +27,31 @@ if ! tailscale status >/dev/null 2>&1; then
   sudo tailscale up
 fi
 
-# --- kubectl Install ---
-echo "[+] Checking kubectl..."
+# ----- Install kubectl -----
 if ! command -v kubectl >/dev/null 2>&1; then
-  echo "[+] Installing kubectl (curl method)..."
+  echo "[+] Installing kubectl..."
   VERSION=$(curl -sL https://dl.k8s.io/release/stable.txt)
   curl -LO "https://dl.k8s.io/release/$VERSION/bin/$OS/$ARCH/kubectl"
   chmod +x kubectl
   sudo mv kubectl /usr/local/bin/
 else
-  echo "[+] kubectl already installed: $(kubectl version --client --short)"
+  echo "[+] kubectl already installed."
 fi
 
-# --- kubeconfig Install ---
-echo "[+] Installing kubeconfig..."
+# ----- Install exec-auth plugin -----
+if ! command -v kubectl-tailscale-auth >/dev/null 2>&1; then
+  echo "[+] Installing kubectl-tailscale-auth..."
+  curl -fsSL https://raw.githubusercontent.com/tailscale/k8s-auth/main/install.sh | sudo bash
+else
+  echo "[+] kubectl-tailscale-auth already installed."
+fi
+
+# ----- Write kubeconfig -----
 mkdir -p ~/.kube
 curl -fsSL https://mulac.github.io/chatto/kubeconfig -o ~/.kube/config
 
 echo ""
-echo "✅ Done!"
-echo "Test access:   kubectl get nodes"
-echo "(Browser login via Tailscale OIDC will occur automatically if needed.)"
+echo "✅ Setup complete!"
+echo "Run: kubectl get nodes"
+echo "(Your browser will prompt you to log in via Tailscale SSO.)"
 
