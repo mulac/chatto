@@ -23,4 +23,3 @@ mkdir -p ~/.kube
 curl -fsSL http://100.120.68.88:8000/k3s.yaml -o ~/.kube/config
 
 echo "✅ Done. Try: kubectl get nodes"
-
