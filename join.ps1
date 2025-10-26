@@ -76,7 +76,6 @@ if ($LastExitCode -ne 0) {
 Write-Host "[+] Installing kubeconfig..."
 $dir="$env:USERPROFILE\.kube"
 New-Item -ItemType Directory -Force -Path $dir | Out-Null
-# This doesn't work!!!
 iwr http://100.120.68.88:8000/k3s.yaml -OutFile "$dir\config"
 
 Write-Host "`n✅ Done! Run: kubectl get nodes"
