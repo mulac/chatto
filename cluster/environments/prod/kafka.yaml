@@ -8,6 +8,7 @@ spec:
   prune: true
   interval: 10m
   wait: true
+  targetNamespace: prod
   dependsOn:
     - name: kafka-operator
   sourceRef:
