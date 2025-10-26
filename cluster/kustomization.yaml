@@ -3,4 +3,3 @@ kind: Kustomization
 resources:
   - platform
   - environments/dev
-  - environments/prod
