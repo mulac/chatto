@@ -4,7 +4,7 @@ metadata:
   name: clickhouse
 spec:
   releaseName: hyperdx
-  internal: 5m
+  interval: 5m
   chart:
     spec:
       chart: hdx-oss-v2
