@@ -34,10 +34,12 @@ spec:
         port: 9093
         type: internal
         tls: true
-      - name: lan
+      - name: local
         port: 9094
         type: cluster-ip
         tls: false
+        configuration:
+          advertisedHostTemplate: localhost
     config:
       offsets.topic.replication.factor: 1
       transaction.state.log.replication.factor: 1
