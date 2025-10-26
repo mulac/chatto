@@ -20,7 +20,7 @@ GitOps-managed kubernetes cluster for with app kustomizations.
 curl -fsSL mulac.github.io/chatto/join.sh | sh
 
 # Windows
-iwr https://<username>.github.io/k3s/join.ps1 | iex
+iwr mulac.github.io/chatto/join.ps1 | iex
 ```
 
 This automatically:
