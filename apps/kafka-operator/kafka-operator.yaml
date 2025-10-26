@@ -21,5 +21,12 @@ spec:
         namespace: flux-system
   values:
     watchAnyNamespace: true
+    resources:
+      limits:
+        memory: 800Mi
+        cpu: 1000m
+      requests:
+        memory: 384Mi
+        cpu: 200m
   install:
     createNamespace: false
