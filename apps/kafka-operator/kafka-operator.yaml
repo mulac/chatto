@@ -19,5 +19,7 @@ spec:
         kind: HelmRepository
         name: strimzi-charts
         namespace: flux-system
+  values:
+    watchAnyNamespace: true
   install:
     createNamespace: false
