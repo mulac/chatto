@@ -1,0 +1,14 @@
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: clickhouse
+  namespace: flux-system
+spec:
+  path: ./apps/clickhouse
+  prune: true
+  interval: 10m
+  wait: true
+  targetNamespace: dev
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
