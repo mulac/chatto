@@ -6,23 +6,22 @@ metadata:
     app: redis
 spec:
   kubernetesConfig:
-    kubernetesMasterLabel: "master"
+    image: quay.io/opstree/redis:v8.6.2
+    imagePullPolicy: IfNotPresent
+    resources:
+      requests:
+        cpu: 500m
+        memory: 1Gi
+      limits:
+        cpu: 1000m
+        memory: 4Gi
   redisExporter:
     enabled: true
     image: quay.io/opstree/redis-exporter:v1.82.0
-  redisCore:
-    image: quay.io/opstree/redis:v8.6.2
-    resources:
-      requests:
-        cpu: 100m
-        memory: 128Mi
-      limits:
-        cpu: 200m
-        memory: 256Mi
   storage:
     volumeClaimTemplate:
       spec:
         accessModes: ["ReadWriteOnce"]
         resources:
           requests:
-            storage: 2Gi
+            storage: 10Gi
