@@ -1,0 +1,28 @@
+apiVersion: redis.redis.opstreelabs.in/v1beta2
+kind: Redis
+metadata:
+  name: redis-standalone
+  labels:
+    app: redis
+spec:
+  kubernetesConfig:
+    kubernetesMasterLabel: "master"
+  redisExporter:
+    enabled: true
+    image: quay.io/opstree/redis-exporter:v1.82.0
+  redisCore:
+    image: quay.io/opstree/redis:v8.6.2
+    resources:
+      requests:
+        cpu: 100m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+  storage:
+    volumeClaimTemplate:
+      spec:
+        accessModes: ["ReadWriteOnce"]
+        resources:
+          requests:
+            storage: 2Gi

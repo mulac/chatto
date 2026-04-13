@@ -5,3 +5,4 @@ resources:
   - clickhouse.yaml
   - nats.yaml
   - arq.yaml
+  - redis.yaml
