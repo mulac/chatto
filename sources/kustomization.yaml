@@ -6,3 +6,4 @@ resources:
   - nats.yaml
   - arq.yaml
   - redis.yaml
+  - tailscale.yaml
