@@ -4,4 +4,5 @@ resources:
   - flux-system
   - kafka-operator.yaml
   - redis-operator.yaml
+  - tailscale-operator.yaml
   - ../../sources
